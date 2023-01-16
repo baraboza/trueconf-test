@@ -14,10 +14,13 @@
   },
   "dependencies": {
     "core-js": "^3.25.3",
+    "node-sass": "^8.0.0",
     "nuxt": "^2.15.8",
+    "sass-loader": "^10",
     "vue": "^2.7.10",
     "vue-server-renderer": "^2.7.10",
-    "vue-template-compiler": "^2.7.10"
+    "vue-template-compiler": "^2.7.10",
+    "normalize.css": "^8.0.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
