@@ -8,7 +8,13 @@
       bottom: bottomPosition,
       transitionDuration,
     }"
-  />
+  >
+    <span
+      v-show="lift.moving || lift.waiting"
+      :class="$style.board"
+      v-text="boardText"
+    />
+  </div>
 </template>
 
 <script>
@@ -37,13 +43,23 @@ export default {
 
   data () {
     return {
-      transitionDuration: ''
+      transitionDuration: '',
+      direction: ''
     }
   },
 
   computed: {
     bottomPosition () {
       return `${100 * (this.lift.floor - 1) / this.floorsNumber}%`
+    },
+
+    boardText () {
+      const arrow = {
+        up: '↑',
+        down: '↓'
+      }[this.direction]
+
+      return `${arrow} ${this.lift.floor}`
     }
   },
 
@@ -51,6 +67,8 @@ export default {
     'lift.floor' (newValue, prevValue) {
       const movingDuration = ONE_FLOOR_SPEED * Math.abs(newValue - prevValue)
       this.transitionDuration = `${movingDuration}ms`
+
+      this.direction = (newValue - prevValue) > 0 ? 'up' : 'down'
 
       setTimeout(() => {
         this.$emit('move-end')
@@ -69,6 +87,10 @@ export default {
   position: absolute;
   left: 0;
   bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 10px;
   width: 100%;
   background: #66c9fe;
   transition-property: bottom;
@@ -77,6 +99,15 @@ export default {
   &._waiting {
     animation: liftWaiting 0.8s infinite;
   }
+}
+
+.board {
+  padding: 5px;
+  width: 60px;
+  text-align: center;
+  border-radius: 3px;
+  color: #fff;
+  background-color: rgba(#000, 0.6);
 }
 
 @keyframes liftWaiting {
