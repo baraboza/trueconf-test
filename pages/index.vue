@@ -1,24 +1,33 @@
 <template>
   <div :class="$style.IndexPage">
     <div :class="$style.wrap">
-      <TheFloors
-        :floors="floors"
-        @button-click="onFloorButtonClick"
-      />
+      <div :class="$style.floors">
+        <TheFloor
+          v-for="floor in floors"
+          :key="floor.number"
+          :floor="floor"
+          @button-click="onFloorButtonClick"
+        />
+      </div>
 
-      <TheShaft
-        :floors-number="floors.length"
-        :lifts="lifts"
-        @lift-move-end="onLiftMoveEnd"
-        @lift-wait-end="onLiftWaitEnd"
-      />
+      <div :class="$style.shaft">
+        <TheLift
+          v-for="(lift, index) in lifts"
+          :key="index"
+          :lift="lift"
+          :height="liftHeight"
+          :floors-number="floors.length"
+          @move-end="onLiftMoveEnd(index)"
+          @wait-end="onLiftWaitEnd(index)"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import TheFloors from '@/components/TheFloors'
-import TheShaft from '@/components/TheShaft'
+import TheFloor from '@/components/TheFloor'
+import TheLift from '@/components/TheLift'
 
 const FLOORS_NUMBER = 5
 const LIFTS_NUMBER = 1
@@ -27,8 +36,8 @@ export default {
   name: 'IndexPage',
 
   components: {
-    TheFloors,
-    TheShaft
+    TheFloor,
+    TheLift
   },
 
   data () {
@@ -55,6 +64,10 @@ export default {
       }
 
       return floors
+    },
+
+    liftHeight () {
+      return `${100 / this.floors.length}%`
     }
   },
 
@@ -171,5 +184,21 @@ export default {
   position: relative;
   height: 100%;
   border-top: 1px solid lightgray;
+}
+
+.floors {
+  display: flex;
+  flex-direction: column-reverse;
+  height: 100%;
+}
+
+.shaft {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  bottom: 0;
+  width: 150px;
+  border-left: 2px solid gray;
+  border-right: 2px solid gray;
 }
 </style>
