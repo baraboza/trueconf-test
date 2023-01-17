@@ -1,19 +1,21 @@
 <template>
-  <div
-    :class="[$style.TheLift, {
-      [$style._waiting]: lift.waiting
-    }]"
-    :style="{
-      height,
-      bottom: bottomPosition,
-      transitionDuration,
-    }"
-  >
-    <span
-      v-show="lift.moving || lift.waiting"
-      :class="$style.board"
-      v-text="boardText"
-    />
+  <div :class="$style.LiftShaft">
+    <div
+      :class="[$style.lift, {
+        [$style._waiting]: lift.waiting
+      }]"
+      :style="{
+        height,
+        bottom: bottomPosition,
+        transitionDuration,
+      }"
+    >
+      <span
+        v-show="lift.moving || lift.waiting"
+        :class="$style.board"
+        v-text="boardText"
+      />
+    </div>
   </div>
 </template>
 
@@ -22,7 +24,7 @@ const ONE_FLOOR_SPEED = 1000
 const WAITING_DURATION = 3000
 
 export default {
-  name: 'TheLift',
+  name: 'LiftShaft',
 
   props: {
     height: {
@@ -83,7 +85,14 @@ export default {
 </script>
 
 <style lang="scss" module>
-.TheLift {
+.LiftShaft {
+  position: relative;
+  width: 120px;
+  border-left: 2px solid gray;
+  border-right: 2px solid gray;
+}
+
+.lift {
   position: absolute;
   left: 0;
   bottom: 0;

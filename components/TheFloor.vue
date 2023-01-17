@@ -31,7 +31,7 @@ export default {
 .TheFloor {
   flex-grow: 1;
   border-bottom: 1px solid lightgray;
-  padding: 10px 10px 10px 185px;
+  padding: 10px;
 }
 
 .number {

@@ -6,14 +6,16 @@
           v-for="floor in floors"
           :key="floor.number"
           :floor="floor"
+          :style="{paddingLeft: floorPaddingLeft}"
           @button-click="onFloorButtonClick"
         />
       </div>
 
-      <div :class="$style.shaft">
-        <TheLift
+      <div ref="shafts" :class="$style.shafts">
+        <LiftShaft
           v-for="(lift, index) in lifts"
           :key="index"
+          :class="$style.shaft"
           :lift="lift"
           :height="liftHeight"
           :floors-number="floors.length"
@@ -27,17 +29,17 @@
 
 <script>
 import TheFloor from '@/components/TheFloor'
-import TheLift from '@/components/TheLift'
+import LiftShaft from '@/components/LiftShaft'
 
-const FLOORS_NUMBER = 5
-const LIFTS_NUMBER = 1
+const FLOORS_NUMBER = 7
+const LIFTS_NUMBER = 4
 
 export default {
   name: 'IndexPage',
 
   components: {
     TheFloor,
-    TheLift
+    LiftShaft
   },
 
   data () {
@@ -68,6 +70,10 @@ export default {
 
     liftHeight () {
       return `${100 / this.floors.length}%`
+    },
+
+    floorPaddingLeft () {
+      return `${this.lifts.length * 130 + 20}px`
     }
   },
 
@@ -192,13 +198,15 @@ export default {
   height: 100%;
 }
 
-.shaft {
+.shafts {
   position: absolute;
   top: 0;
-  left: 10px;
   bottom: 0;
-  width: 150px;
-  border-left: 2px solid gray;
-  border-right: 2px solid gray;
+  left: 0;
+  display: flex;
+}
+
+.shaft {
+  margin-left: 10px;
 }
 </style>
