@@ -47,7 +47,7 @@ export default {
 
         floors[i] = {
           number,
-          waiting: (
+          waiting: Boolean(
             this.callQueue.includes(number) ||
             this.lifts.find(lift => lift.floor === number && lift.moving)
           )
@@ -64,15 +64,19 @@ export default {
 
       const floorInProgress = this.callQueue[0]
 
-      const freeLift = this.lifts
-        .filter(lift => !lift.moving && !lift.waiting)
-        .sort((a, b) => Math.abs(a.floor - floorInProgress) - Math.abs(b.floor - floorInProgress))[0]
+      const freeLifts = this.lifts.filter(lift => !lift.moving && !lift.waiting)
 
-      if (!freeLift) { return }
+      let closestLift
 
-      const freeLiftIndex = this.lifts.indexOf(freeLift)
+      if (!freeLifts.length) {
+        return
+      } else if (freeLifts.length === 1) {
+        closestLift = freeLifts[0]
+      } else {
+        closestLift = freeLifts.sort((a, b) => Math.abs(a.floor - floorInProgress) - Math.abs(b.floor - floorInProgress))[0]
+      }
 
-      this.sendLift(freeLiftIndex)
+      this.sendLift(this.lifts.indexOf(closestLift))
     }
   },
 
