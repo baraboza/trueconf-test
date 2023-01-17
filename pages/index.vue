@@ -60,6 +60,8 @@ export default {
 
   watch: {
     callQueue () {
+      this.saveObjectInLS('callQueue', this.callQueue)
+
       if (!this.callQueue.length) { return }
 
       const floorInProgress = this.callQueue[0]
@@ -80,19 +82,42 @@ export default {
     }
   },
 
-  created () {
+  mounted () {
     this.initLifts()
+    this.$nextTick(() => this.initCallQueue())
   },
 
   methods: {
     initLifts () {
+      const liftsFromLS = this.getObjectFromLS('lifts') || []
+
       for (let i = 0; i < LIFTS_NUMBER; i++) {
-        this.lifts.push({
+        this.lifts.push(liftsFromLS[i] || {
           floor: 1,
           moving: false,
           waiting: false
         })
       }
+    },
+
+    initCallQueue () {
+      this.callQueue = this.getObjectFromLS('callQueue') || []
+    },
+
+    getObjectFromLS (name) {
+      const value = localStorage.getItem(name)
+
+      if (value) {
+        try {
+          return JSON.parse(value)
+        } catch (e) {
+          localStorage.removeItem(name)
+        }
+      }
+    },
+
+    saveObjectInLS (name, value) {
+      localStorage.setItem(name, JSON.stringify(value))
     },
 
     onFloorButtonClick (floorNumber) {
@@ -124,6 +149,12 @@ export default {
 
       lift.moving = true
       lift.floor = this.callQueue.shift()
+
+      this.saveObjectInLS('lifts', this.lifts.map(lift => ({
+        ...lift,
+        moving: false,
+        waiting: false
+      })))
     }
   }
 }
